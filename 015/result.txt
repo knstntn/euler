@@ -1,0 +1,4 @@
+https://betterexplained.com/articles/navigate-a-grid-using-combinations-and-permutations/
+http://staff.argyll.epsb.ca/jreed/math30p/perms_combs/pathways.htm
+
+40!/(20!*20!)
