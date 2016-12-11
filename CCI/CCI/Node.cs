@@ -1,11 +1,24 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 namespace CCI
 {
     public sealed class Node<T> : IEnumerable<Node<T>>
     {
+        public Node()
+        {
+        }
+
+        public Node(T data) : this(data, null)
+        {
+        }
+
+        public Node(T data, Node<T> next)
+        {
+            Next = next;
+            Data = data;
+        }
+
         public Node<T> Next { get; set; }
         public T Data { get; set; }
 
@@ -21,7 +34,7 @@ namespace CCI
 
         private sealed class NodeEnumerator : IEnumerator<Node<T>>
         {
-            private Node<T> _root;
+            private readonly Node<T> _root;
 
             public NodeEnumerator(Node<T> root)
             {

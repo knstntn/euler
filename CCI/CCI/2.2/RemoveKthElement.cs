@@ -6,6 +6,7 @@ namespace CCI
 {
     public class RemoveKthElement
     {
+        // PARTIALLY WRONG: task was to find not remove kth element
         public static Node<int> Do(Node<int> root, int k)
         {
             var length = root.Count();
