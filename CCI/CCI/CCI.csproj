@@ -51,6 +51,11 @@
     <Compile Include="1.5\ModificationsCounter.cs" />
     <Compile Include="1.6\SqueezeString.cs" />
     <Compile Include="1.7\RotateMatrix.cs" />
+    <Compile Include="1.8\NullifyMatrix.cs" />
+    <Compile Include="1.9\StringChecker.cs" />
+    <Compile Include="2.1\LinkedListDuplicates.cs" />
+    <Compile Include="2.2\RemoveKthElement.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
