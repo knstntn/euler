@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CCI
 {
-    public sealed class Node<T> : IEnumerable<Node<T>>
+    public class Node<T> : IEnumerable<Node<T>>
     {
         public Node()
         {

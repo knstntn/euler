@@ -59,6 +59,9 @@
     <Compile Include="2.4\SortList.cs" />
     <Compile Include="2.5\SumLists.cs" />
     <Compile Include="2.6\PalindromeList.cs" />
+    <Compile Include="2.7\IntersectLists.cs" />
+    <Compile Include="2.8\CycleList.cs" />
+    <Compile Include="3.2\StackWithMin.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
