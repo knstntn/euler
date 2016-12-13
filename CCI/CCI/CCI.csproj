@@ -62,6 +62,9 @@
     <Compile Include="2.7\IntersectLists.cs" />
     <Compile Include="2.8\CycleList.cs" />
     <Compile Include="3.2\StackWithMin.cs" />
+    <Compile Include="3.4\MyQueue.cs" />
+    <Compile Include="3.5\SortedStack.cs" />
+    <Compile Include="3.6\AnimalShelter.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
