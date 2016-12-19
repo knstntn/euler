@@ -67,6 +67,10 @@
     <Compile Include="3.6\AnimalShelter.cs" />
     <Compile Include="4.1\GraphPathSearch.cs" />
     <Compile Include="4.2\CreateBST.cs" />
+    <Compile Include="4.3\TreeToList.cs" />
+    <Compile Include="4.4\BalancedTree.cs" />
+    <Compile Include="4.5\TreeIsBST.cs" />
+    <Compile Include="4.6\FindNext.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />

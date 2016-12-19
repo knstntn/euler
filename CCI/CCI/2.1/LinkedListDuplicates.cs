@@ -59,7 +59,7 @@ namespace CCI
                         }
                     }
                 };
-                var updated = RemoveDuplicates(root).Select(x => x.Data).ToList();
+                var updated = RemoveDuplicates(root).AsEnumerable().Select(x => x.Data).ToList();
                 CollectionAssert.AreEqual(new List<int> {1, 2, 3, 4}, updated);
             }
         }

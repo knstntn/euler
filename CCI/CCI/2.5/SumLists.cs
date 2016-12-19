@@ -90,7 +90,7 @@ namespace CCI
                 var n1 = new Node<int>(7, new Node<int>(1, new Node<int>(6)));
                 var n2 = new Node<int>(5, new Node<int>(9, new Node<int>(2)));
 
-                var updated = Sum1(n1, n2).Select(x => x.Data).ToList();
+                var updated = Sum1(n1, n2).AsEnumerable().Select(x => x.Data).ToList();
                 CollectionAssert.AreEqual(new List<int> {2, 1, 9}, updated);
             }
 
@@ -100,7 +100,7 @@ namespace CCI
                 var n1 = new Node<int>(6, new Node<int>(1, new Node<int>(7)));
                 var n2 = new Node<int>(2, new Node<int>(9, new Node<int>(5)));
 
-                var updated = Sum2(n1, n2).Select(x => x.Data).ToList();
+                var updated = Sum2(n1, n2).AsEnumerable().Select(x => x.Data).ToList();
                 CollectionAssert.AreEqual(new List<int> { 9, 1, 2 }, updated);
             }
         }

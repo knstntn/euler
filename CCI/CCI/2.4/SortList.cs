@@ -82,7 +82,7 @@ namespace CCI
                         }
                     }
                 };
-                var updated = Do(root, 3).Select(x => x.Data).ToList();
+                var updated = Do(root, 3).AsEnumerable().Select(x => x.Data).ToList();
                 CollectionAssert.AreEqual(new List<int> {1, 2, 2, 3, 4}, updated);
             }
         }

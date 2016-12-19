@@ -9,7 +9,7 @@ namespace CCI
         // PARTIALLY WRONG: task was to find not remove kth element
         public static Node<int> Do(Node<int> root, int k)
         {
-            var length = root.Count();
+            var length = root.AsEnumerable().Count();
             var n = length - 1 - k;
 
             var tmp = root;
@@ -63,21 +63,21 @@ namespace CCI
             [Test]
             public void Test1()
             {
-                var updated = Do(_root, 3).Select(x => x.Data).ToList();
+                var updated = Do(_root, 3).AsEnumerable().Select(x => x.Data).ToList();
                 CollectionAssert.AreEqual(new List<int> {1, 3, 2, 4}, updated);
             }
 
             [Test]
             public void Test2()
             {
-                var updated = Do(_root, 4).Select(x => x.Data).ToList();
+                var updated = Do(_root, 4).AsEnumerable().Select(x => x.Data).ToList();
                 CollectionAssert.AreEqual(new List<int> {2, 3, 2, 4}, updated);
             }
 
             [Test]
             public void Test3()
             {
-                var updated = Do(_root, 0).Select(x => x.Data).ToList();
+                var updated = Do(_root, 0).AsEnumerable().Select(x => x.Data).ToList();
                 CollectionAssert.AreEqual(new List<int> {1, 2, 3, 2}, updated);
             }
         }
