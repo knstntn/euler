@@ -48,8 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryHeap.cs" />
+    <Compile Include="Dijkstra.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunningMedian.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

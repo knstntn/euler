@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Heaps
 {
-    public abstract class BinaryHeap
+    public class BinaryHeap<T>
     {
-        private readonly Func<int, int, bool> _compare;
+        private readonly Func<T, T, bool> _compare;
         // placing dummy value as a first one to make index calculation easier
         // ref. Sedgewick
-        private readonly List<int> _data = new List<int> {int.MinValue};
+        private readonly List<T> _data = new List<T> {default(T)};
 
-        protected BinaryHeap(Func<int, int, bool> compare)
+        public BinaryHeap(Func<T, T, bool> compare)
         {
             _compare = compare;
         }
 
-        public int Peek()
+        public int Length()
+        {
+            return _data.Count - 1;
+        }
+
+        public T Peek()
         {
             if (Length() == 0)
             {
@@ -26,7 +32,7 @@ namespace Heaps
             return _data[1];
         }
 
-        public int Pop()
+        public T Pop()
         {
             if (Length() == 0)
             {
@@ -48,15 +54,31 @@ namespace Heaps
             return top;
         }
 
-        public void Push(int i)
+        public void Push(T i)
         {
             _data.Add(i);
             Bubble(_data.Count - 1);
         }
 
-        public int Length()
+        public void Replace(Func<T, bool> func, T value)
         {
-            return _data.Count - 1;
+            var elem = _data.Skip(1).First(func);
+            var index = _data.IndexOf(elem);
+
+            _data[index] = value;
+            if (_compare(elem, value))
+            {
+                Sink(index);
+            }
+            else
+            {
+                Bubble(index);
+            }
+        }
+
+        public bool Contains(Func<T, bool> func)
+        {
+            return _data.Skip(1).Any(func);
         }
 
         private void Bubble(int index)
@@ -105,14 +127,14 @@ namespace Heaps
         }
     }
 
-    public sealed class MinBinaryHeap : BinaryHeap
+    public sealed class MinBinaryHeap : BinaryHeap<int>
     {
         public MinBinaryHeap() : base((left, right) => left <= right)
         {
         }
     }
 
-    public sealed class MaxBinaryHeap : BinaryHeap
+    public sealed class MaxBinaryHeap : BinaryHeap<int>
     {
         public MaxBinaryHeap() : base((left, right) => left >= right)
         {
@@ -122,61 +144,61 @@ namespace Heaps
     [TestFixture]
     public class BinaryHeapTests
     {
-        [Test]
-        public void MinBinaryHeapTest()
-        {
-            var heap = new MinBinaryHeap();
-
-            heap.Push(12);
-            heap.Push(2445);
-            heap.Push(1);
-            heap.Push(4123);
-            heap.Push(41);
-            heap.Push(4);
-            heap.Push(48);
-            heap.Push(90);
-            heap.Push(0);
-
-            Assert.AreEqual(9, heap.Length());
-
-            Assert.AreEqual(0, heap.Pop());
-            Assert.AreEqual(1, heap.Pop());
-            Assert.AreEqual(4, heap.Pop());
-            Assert.AreEqual(12, heap.Pop());
-            Assert.AreEqual(41, heap.Pop());
-            Assert.AreEqual(48, heap.Pop());
-            Assert.AreEqual(90, heap.Pop());
-            Assert.AreEqual(2445, heap.Pop());
-            Assert.AreEqual(4123, heap.Pop());
-        }
+        private readonly int[] _numbers = {12, 2445, 1, 4123, 41, 4, 48, 90, 0};
 
         [Test]
         public void MaxBinaryHeapTest()
         {
             var heap = new MaxBinaryHeap();
+            foreach (var number in _numbers)
+            {
+                heap.Push(number);
+            }
 
-            heap.Push(12);
-            heap.Push(2445);
-            heap.Push(1);
-            heap.Push(4123);
-            heap.Push(41);
-            heap.Push(4);
-            heap.Push(48);
-            heap.Push(90);
-            heap.Push(0);
+            Assert.AreEqual(_numbers.Length, heap.Length());
 
-            Assert.AreEqual(9, heap.Length());
-
-            Assert.AreEqual(4123, heap.Pop());
-            Assert.AreEqual(2445, heap.Pop());
-            Assert.AreEqual(90, heap.Pop());
-            Assert.AreEqual(48, heap.Pop());
-            Assert.AreEqual(41, heap.Pop());
-            Assert.AreEqual(12, heap.Pop());
-            Assert.AreEqual(4, heap.Pop());
-            Assert.AreEqual(1, heap.Pop());
-            Assert.AreEqual(0, heap.Pop());
+            foreach (var number in _numbers.OrderByDescending(x => x))
+            {
+                Assert.AreEqual(number, heap.Pop());
+            }
         }
 
+        [Test]
+        public void MinBinaryHeapTest1()
+        {
+            var heap = new MinBinaryHeap();
+            foreach (var number in _numbers)
+            {
+                heap.Push(number);
+            }
+
+            Assert.AreEqual(_numbers.Length, heap.Length());
+
+            foreach (var number in _numbers.OrderBy(x => x))
+            {
+                Assert.AreEqual(number, heap.Pop());
+            }
+        }
+
+        [Test]
+        public void MinBinaryHeapTest2()
+        {
+            var heap = new MinBinaryHeap();
+            foreach (var number in _numbers)
+            {
+                heap.Push(number);
+            }
+
+            Assert.AreEqual(_numbers.Length, heap.Length());
+            Assert.AreEqual(0, heap.Peek());
+
+            heap.Replace(x => x == 0, 5000);
+            Assert.AreEqual(_numbers.Length, heap.Length());
+            Assert.AreEqual(1, heap.Peek());
+
+            heap.Replace(x => x == 5000, -1);
+            Assert.AreEqual(_numbers.Length, heap.Length());
+            Assert.AreEqual(-1, heap.Peek());
+        }
     }
 }
