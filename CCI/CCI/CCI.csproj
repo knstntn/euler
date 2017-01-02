@@ -73,6 +73,9 @@
     <Compile Include="4.6\FindNext.cs" />
     <Compile Include="4.7\ProjectList.cs" />
     <Compile Include="4.9\TreePermutations.cs" />
+    <Compile Include="5.1\SetBitValue.cs" />
+    <Compile Include="8.1\StairsClimbing.cs" />
+    <Compile Include="8.2\RobotMovements.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
