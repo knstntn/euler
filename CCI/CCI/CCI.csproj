@@ -80,6 +80,8 @@
     <Compile Include="8.4\EnumerateSubsets.cs" />
     <Compile Include="8.5\Multiplication.cs" />
     <Compile Include="8.6\HanoiTowers.cs" />
+    <Compile Include="8.7\StringPermutations.cs" />
+    <Compile Include="8.9\BracketsPermutations.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
