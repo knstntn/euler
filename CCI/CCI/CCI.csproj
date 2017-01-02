@@ -76,6 +76,10 @@
     <Compile Include="5.1\SetBitValue.cs" />
     <Compile Include="8.1\StairsClimbing.cs" />
     <Compile Include="8.2\RobotMovements.cs" />
+    <Compile Include="8.3\MagicIndex.cs" />
+    <Compile Include="8.4\EnumerateSubsets.cs" />
+    <Compile Include="8.5\Multiplication.cs" />
+    <Compile Include="8.6\HanoiTowers.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
