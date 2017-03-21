@@ -1,5 +1,6 @@
 class InsertionSort(object):
     def __init__(self):
+        self.name = 'InsertionSort'
         pass
 
     def sort(self, a, compare):
@@ -23,8 +24,3 @@ class InsertionSort(object):
 
     def desc(self, a):
         return self.sort(a, lambda left, right: left < right)
-
-
-sort = InsertionSort()
-print(sort.asc([55, 44, 22, 99, 78]))
-print(sort.desc([5, 44, 22, 99, 78]))
