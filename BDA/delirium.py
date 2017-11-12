@@ -3,32 +3,33 @@ import random
 
 class Word(object):
     counter = 0
-    children = {}
+    descendants = {}
 
-    def __init__(self, counter, children):
+    def __init__(self, counter, descendants):
         self.counter = counter
-        self.children = children
-
-    def next_key(self):
-        if len(self.children) == 0:
-            return None
-
-        rand = random.randint(1, 99)
-        prob = 0
-
-        for key, value in self.children.items():
-            prob += (value / self.counter) * 100
-
-            if rand <= prob:
-                return key
-
-        return None
+        self.descendants = descendants
 
 
-def get_random_key(d):
+def get_random_word(d):
     keys = list(d.keys())
     index = random.randint(0, len(keys) - 1)
     return keys[index]
+
+
+def get_next_word(word):
+    if len(word.descendants) == 0:
+        return None
+
+    rand = random.randint(1, 99)
+    prob = 0
+
+    for key, value in word.descendants.items():
+        prob += (value / word.counter) * 100
+
+        if rand <= prob:
+            return key
+
+    return None
 
 
 def generate():
@@ -43,20 +44,21 @@ def generate():
 
     for x in range(0, len(text)):
         key = text[x:x + k]
-        next = text[x + k:x + k + k]
+        next_key = text[x + k:x + k + k]
 
-        value = words.setdefault(key, Word(0, {}))
-        value.counter += 1
-        value.children.setdefault(next, 0)
-        value.children[next] += 1
+        word = words.setdefault(key, Word(0, {}))
+        word.counter += 1
 
-    next_key = get_random_key(words)
+        word.descendants.setdefault(next_key, 0)
+        word.descendants[next_key] += 1
+
+    next_key = get_random_word(words)
 
     while stop > 0:
         yield next_key
 
         word = words[next_key]
-        next_key = word.next_key() or get_random_key(words)
+        next_key = get_next_word(word) or get_random_word(words)
         stop -= len(next_key)
 
 

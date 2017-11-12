@@ -1,5 +1,5 @@
 {
     "editor.formatOnSave": true,
     "python.formatting.formatOnSave": true,
-    "python.formatting.autopep8Path": "~/.virtualenvs/random/bin/autopep8"
+    "python.pythonPath": "~/.virtualenvs/random/bin/python3"
 }
