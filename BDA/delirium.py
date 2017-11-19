@@ -34,9 +34,9 @@ def get_next_word(word):
 
 def generate():
     # text = input("Enter text: ")
-    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam dolor nunc, pharetra quis nisi ut, tempor posuere ex. Proin vulputate convallis mauris, eu vestibulum neque porttitor sit amet. Integer non vestibulum mauris. Suspendisse vel massa lacinia felis tempor finibus non eu tellus. Quisque accumsan eu lorem a feugiat. Quisque velit lacus, egestas eget magna tempus, venenatis sodales ligula. Donec facilisis, nunc vitae scelerisque semper, tortor neque mollis lorem, non bibendum dolor dolor in ante. In hac habitasse platea dictumst. Proin semper nisl vitae odio vulputate, nec maximus tellus convallis. Fusce porttitor ullamcorper sollicitudin. Integer at tortor ut erat faucibus pulvinar."
+    text = "Только такая цель позволяет человеку прожить свою жизнь с достоинством и получить настоящую радость. Да, радость! Подумайте: если человек ставит себе задачей увеличивать в жизни добро, приносить людям счастье, какие неудачи могут его постигнуть? Не тому помочь? Но много ли людей не нуждаются в помощи?"
     # k = int(input("Enter k: "))
-    k = 3
+    k = 7
     # stop = int(input("Enter length to stop: "))
     stop = 1000
 
