@@ -51,11 +51,11 @@ def decode(text, code):
 
 
 if __name__ == '__main__':
-    alphabet = "abbccccdddddffttt0000000000"
-    test = 'abcdabcdcdabdba'
+    test = "abbccccdddddffttt0000000000"
 
-    code = get_code(alphabet)
+    code = get_code(test)
     encoded = encode(test, code)
     decoded = decode(encoded, code)
 
-    print(code, encoded, decoded, test == decoded)
+    print(code)
+    print(encoded, decoded, test == decoded)
