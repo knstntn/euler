@@ -14,9 +14,8 @@ class NaiveBayes():
     class NaiveBayesClass():
         """Class description for naive bayes"""
 
-        def __init__(self, counter, features_counter, features):
+        def __init__(self, counter, features):
             self.counter = counter
-            self.features_counter = features_counter
             self.features = features
 
         def __str__(self):
@@ -32,28 +31,28 @@ class NaiveBayes():
 
         # Counting classes and features
         classes = {}
-        classes_counter = 0
         for (i, row) in enumerate(X):
             name = y[i]
 
-            classes.setdefault(name, NaiveBayes.NaiveBayesClass(0, 0, {}))
+            classes.setdefault(name, NaiveBayes.NaiveBayesClass(0, []))
             classes[name].counter += 1
 
-            classes_counter += 1
+            for (index, feature) in enumerate(row):
+                if len(classes[name].features) <= index:
+                    classes[name].features.append({})
 
-            for (_, feature) in enumerate(row):
-                classes[name].features_counter += 1
-
-                classes[name].features.setdefault(feature, 0)
-                classes[name].features[feature] += 1
+                classes[name].features[index].setdefault(feature, 0)
+                classes[name].features[index][feature] += 1
 
         # Normalizing ie counting probabilities
         for name in classes:
             cl = classes[name]
-            cl.counter /= classes_counter
+            cl.counter /= len(X)
 
-            for f in cl.features:
-                cl.features[f] /= cl.features_counter
+            for (_, d) in enumerate(cl.features):
+                s = sum(d.values())
+                for feature in d:
+                    d[feature] /= s
 
         self.__classes = classes
 
@@ -62,11 +61,14 @@ class NaiveBayes():
 
         def calculate_log_prob_for_class(class_name, features):
             """Returns log prob for tested class"""
+            default = 1 / 1000
+
             cl = self.__classes[class_name]
             res = log(cl.counter)
-            for f in features:
-                default = 1 / len(cl.features)
-                res += log(cl.features.get(f, default))
+
+            for (index, feature) in enumerate(features):
+                val = cl.features[index].get(feature, default)
+                res += log(val)
             return res
 
         result = []
@@ -118,7 +120,7 @@ if __name__ == '__main__':
             return np.array(list(filter_soybean_data(data)))
 
     def test(data):
-        TRAIN_SIZE = 0.75
+        TRAIN_SIZE = 0.95
         train_set, test_set = train_test_split(
             data,
             random_state=1,
@@ -139,5 +141,5 @@ if __name__ == '__main__':
         print('---------')
         print(test_target)
 
-    test(get_golf_data())
-    # test(get_soybean_data())
+    # test(get_golf_data())
+    test(get_soybean_data())
