@@ -1,5 +1,7 @@
 {
     "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.renderWhitespace": "all",
     "python.formatting.formatOnSave": true,
     "python.pythonPath": "~/.virtualenvs/random/bin/python3"
 }
