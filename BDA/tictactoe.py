@@ -1,5 +1,6 @@
 from joblib import Parallel, delayed
 import multiprocessing
+import time
 
 PLAYER_MOVE = 'o'
 COMPUTER_MOVE = 'x'
@@ -102,23 +103,20 @@ class MinMaxPlayer:
     def __str__(self):
         return 'computer player'
 
-    def process(self, x):
-        cp = board.copy()
-        cp.update(x, COMPUTER_MOVE)
-        return (x, self.__evaluate(cp, COMPUTER_MOVE, PLAYER_MOVE, 1))
-
-    def sqrt(self, n):
-        print(n)
-        return n**2
-
     def next_move(self, board):
-        num_cores = multiprocessing.cpu_count()
-        scores = Parallel(n_jobs=num_cores)(
-            delayed(self.process)(x) for x in board.empty_cells()
-        )
-        return scores.index(max(scores))
+        max_score = None
+        max_index = None
+        for x in board.empty_cells():
+            cp = board.copy()
+            cp.update(x, COMPUTER_MOVE)
 
-    def __evaluate(self, board, prev_move, next_move, depth):
+            score = self.evaluate(cp, COMPUTER_MOVE, PLAYER_MOVE, 1)
+            if max_score is None or score > max_score:
+                max_score = score
+                max_index = x
+        return max_index
+
+    def evaluate(self, board, prev_move, next_move, depth):
         if not board.can_continue():
             return self.__score(board, prev_move)
 
@@ -133,7 +131,7 @@ class MinMaxPlayer:
 
             pm = next_move
             nm = PLAYER_MOVE if next_move == COMPUTER_MOVE else COMPUTER_MOVE
-            summ += self.__evaluate(cp, pm, nm, depth + 1)
+            summ += self.evaluate(cp, pm, nm, depth + 1)
 
         self.mem[key] = summ / depth
         return self.mem[key]
@@ -146,6 +144,24 @@ class MinMaxPlayer:
                 return 10
         else:
             return 0
+
+
+class ParallelMinMaxPlayer(MinMaxPlayer):
+    def next_move(self, board):
+        num_cores = multiprocessing.cpu_count()
+        scores = Parallel(n_jobs=num_cores)(
+            delayed(self.process)(x) for x in board.empty_cells()
+        )
+        m = max(scores, key=lambda x: x[1])
+        return m[0]
+
+    def process(self, x):
+        cp = board.copy()
+        cp.update(x, COMPUTER_MOVE)
+        return (x, self.evaluate(cp, COMPUTER_MOVE, PLAYER_MOVE, 1))
+
+    def __str__(self):
+        return 'parallel computer player'
 
 
 if __name__ == '__main__':
@@ -162,15 +178,23 @@ if __name__ == '__main__':
     size = int(input('Enter field size:'))
     board = TicTacToeBoard(size)
 
-    playerA = HumanPlayer()
+    playerA = ParallelMinMaxPlayer()
     playerB = MinMaxPlayer()
 
     while True:
+        start = time.time()
         board.update(playerA.next_move(board), PLAYER_MOVE)
+        end = time.time()
+        print('Time per move for {0} is {1}'.format(playerA, end - start))
+
         if check_board(board, playerA):
             break
 
+        start = time.time()
         board.update(playerB.next_move(board), COMPUTER_MOVE)
+        end = time.time()
+        print('Time per move for {0} is {1}'.format(playerB, end - start))
+
         if check_board(board, playerB):
             break
 
