@@ -1,3 +1,5 @@
+from joblib import Parallel, delayed
+import multiprocessing
 
 PLAYER_MOVE = 'o'
 COMPUTER_MOVE = 'x'
@@ -85,46 +87,55 @@ class TicTacToeBoard:
         return res
 
 
-class TicTacToeMinMaxSolver:
+class HumanPlayer:
+    def __str__(self):
+        return 'human player'
+
+    def next_move(self, board):
+        return int(input("Enter position:")) - 1
+
+
+class MinMaxPlayer:
     def __init__(self):
         self.mem = {}
 
+    def __str__(self):
+        return 'computer player'
+
+    def process(self, x):
+        cp = board.copy()
+        cp.update(x, COMPUTER_MOVE)
+        return (x, self.__evaluate(cp, COMPUTER_MOVE, PLAYER_MOVE, 1))
+
+    def sqrt(self, n):
+        print(n)
+        return n**2
+
     def next_move(self, board):
-        min_score = 100
-        min_index = None
-        for x in board.empty_cells():
-            cp = board.copy()
-            cp.update(x, COMPUTER_MOVE)
+        num_cores = multiprocessing.cpu_count()
+        scores = Parallel(n_jobs=num_cores)(
+            delayed(self.process)(x) for x in board.empty_cells()
+        )
+        return scores.index(max(scores))
 
-            score = self.__evaluate(cp, PLAYER_MOVE)
-            if score < min_score:
-                min_score = score
-                min_index = x
-
-        return min_index
-
-    def __evaluate(self, board, move):
+    def __evaluate(self, board, prev_move, next_move, depth):
         if not board.can_continue():
-            return self.__score(board, move)
+            return self.__score(board, prev_move)
 
-        key = (move, str(board.state))
+        key = (next_move, str(board.state))
         if key in self.mem:
-            print(key, self.mem[key])
             return self.mem[key]
 
-        values = []
+        summ = 0
         for x in board.empty_cells():
             cp = board.copy()
-            cp.update(x, move)
-            next_move = PLAYER_MOVE if move == COMPUTER_MOVE else COMPUTER_MOVE
-            values.append(self.__evaluate(cp, next_move))
+            cp.update(x, next_move)
 
-        if move == PLAYER_MOVE:
-            value = min(values)
-        else:
-            value = max(values)
+            pm = next_move
+            nm = PLAYER_MOVE if next_move == COMPUTER_MOVE else COMPUTER_MOVE
+            summ += self.__evaluate(cp, pm, nm, depth + 1)
 
-        self.mem[key] = value
+        self.mem[key] = summ / depth
         return self.mem[key]
 
     def __score(self, board, move):
@@ -137,18 +148,7 @@ class TicTacToeMinMaxSolver:
             return 0
 
 
-class TicTacToeProbSolver:
-    def next_move(self, board):
-        return 0
-
-
 if __name__ == '__main__':
-    size = int(input('Enter field size:'))
-
-    board = TicTacToeBoard(size)
-    # computer_player = TicTacToeMinMaxSolver()
-    computer_player = TicTacToeProbSolver()
-
     def check_board(board, winner):
         if not board.can_continue():
             print(board)
@@ -159,22 +159,19 @@ if __name__ == '__main__':
             return True
         return False
 
+    size = int(input('Enter field size:'))
+    board = TicTacToeBoard(size)
+
+    playerA = HumanPlayer()
+    playerB = MinMaxPlayer()
+
     while True:
-        player_position = int(input("Enter position:"))
-        board.update(player_position - 1, PLAYER_MOVE)
-        if check_board(board, 'human player'):
+        board.update(playerA.next_move(board), PLAYER_MOVE)
+        if check_board(board, playerA):
             break
 
-        '''
-        player_position = int(input("Enter position:"))
-        board.update(player_position - 1, COMPUTER_CHAR)
-        if check_board(board, 'human player 2'):
-            break
-        '''
-
-        computer_position = computer_player.next_move(board)
-        board.update(computer_position, COMPUTER_MOVE)
-        if check_board(board, 'computer player'):
+        board.update(playerB.next_move(board), COMPUTER_MOVE)
+        if check_board(board, playerB):
             break
 
         print(board)
