@@ -96,7 +96,7 @@ class HumanPlayer:
         return int(input("Enter position:")) - 1
 
 
-class MinMaxPlayer:
+class TreetSearchPlayer:
     def __init__(self):
         self.mem = {}
 
@@ -118,7 +118,7 @@ class MinMaxPlayer:
 
     def evaluate(self, board, prev_move, next_move, depth):
         if not board.can_continue():
-            return self.__score(board, prev_move)
+            return self.score(board, prev_move)
 
         key = (next_move, str(board.state))
         if key in self.mem:
@@ -136,7 +136,7 @@ class MinMaxPlayer:
         self.mem[key] = summ / depth
         return self.mem[key]
 
-    def __score(self, board, move):
+    def score(self, board, move):
         if board.has_winner:
             if move == PLAYER_MOVE:
                 return -10
@@ -146,7 +146,7 @@ class MinMaxPlayer:
             return 0
 
 
-class ParallelMinMaxPlayer(MinMaxPlayer):
+class ParallelTreetSearchPlayer(TreetSearchPlayer):
     def next_move(self, board):
         num_cores = multiprocessing.cpu_count()
         scores = Parallel(n_jobs=num_cores)(
@@ -178,8 +178,8 @@ if __name__ == '__main__':
     size = int(input('Enter field size:'))
     board = TicTacToeBoard(size)
 
-    playerA = ParallelMinMaxPlayer()
-    playerB = MinMaxPlayer()
+    playerA = HumanPlayer()
+    playerB = TreetSearchPlayer()
 
     while True:
         start = time.time()
