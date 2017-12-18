@@ -106,8 +106,8 @@ class BerlekampMassey:
 
 if __name__ == '__main__':
     inp = '1010'
-    # inp = '101011110'
-    # inp = '1010111100010011010'
+    inp = '101011110'
+    inp = '1010111100010011010'
     # inp = '00001'
     for (i, p) in enumerate(BerlekampMassey().generate_polynoms(inp)):
         print("n:", i, ' polynom:', p)
