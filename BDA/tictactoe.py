@@ -1,6 +1,8 @@
 from joblib import Parallel, delayed
 import multiprocessing
 import time
+import random
+
 
 PLAYER_MOVE = 'o'
 COMPUTER_MOVE = 'x'
@@ -164,6 +166,16 @@ class ParallelTreetSearchPlayer(TreetSearchPlayer):
         return 'parallel computer player'
 
 
+class RandomPlayer:
+    def next_move(self, board):
+        cells = list(board.empty_cells())
+        rand = random.randint(0, len(cells) - 1)
+        return cells[rand]
+
+    def __str__(self):
+        return 'random player'
+
+
 if __name__ == '__main__':
     def check_board(board, winner):
         if not board.can_continue():
@@ -178,8 +190,8 @@ if __name__ == '__main__':
     size = int(input('Enter field size:'))
     board = TicTacToeBoard(size)
 
-    playerA = HumanPlayer()
-    playerB = TreetSearchPlayer()
+    playerA = RandomPlayer()
+    playerB = RandomPlayer()
 
     while True:
         start = time.time()
