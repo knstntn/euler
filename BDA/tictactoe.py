@@ -2,6 +2,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 import time
 import random
+import sys
 
 
 PLAYER_MOVE = 'o'
@@ -99,11 +100,13 @@ class HumanPlayer:
 
 
 class TreetSearchPlayer:
-    def __init__(self):
+    def __init__(self, name, max_depth=sys.maxsize):
         self.mem = {}
+        self.name = name
+        self.max_depth = max_depth + 1
 
     def __str__(self):
-        return 'computer player'
+        return 'computer player: ' + self.name
 
     def next_move(self, board):
         max_score = None
@@ -112,15 +115,18 @@ class TreetSearchPlayer:
             cp = board.copy()
             cp.update(x, COMPUTER_MOVE)
 
-            score = self.evaluate(cp, COMPUTER_MOVE, PLAYER_MOVE, 1)
+            score = self.evaluate(cp, x, COMPUTER_MOVE, PLAYER_MOVE, 1)
             if max_score is None or score > max_score:
                 max_score = score
                 max_index = x
         return max_index
 
-    def evaluate(self, board, prev_move, next_move, depth):
+    def evaluate(self, board, position, prev_move, next_move, depth):
         if not board.can_continue():
             return self.score(board, prev_move)
+
+        if depth > self.max_depth:
+            return self.evaluate_board(board, position, prev_move)
 
         key = (next_move, str(board.state))
         if key in self.mem:
@@ -133,7 +139,7 @@ class TreetSearchPlayer:
 
             pm = next_move
             nm = PLAYER_MOVE if next_move == COMPUTER_MOVE else COMPUTER_MOVE
-            summ += self.evaluate(cp, pm, nm, depth + 1)
+            summ += self.evaluate(cp, x, pm, nm, depth + 1)
 
         self.mem[key] = summ / depth
         return self.mem[key]
@@ -141,14 +147,50 @@ class TreetSearchPlayer:
     def score(self, board, move):
         if board.has_winner:
             if move == PLAYER_MOVE:
-                return -10
+                return -board.size
             else:
-                return 10
+                return board.size
         else:
             return 0
 
+    def evaluate_board(self, board, position, move):
+        row = position // board.size
+        column = position % board.size
+
+        def count(lo, hi, stride):
+            s = ''.join(board.state[lo: hi:stride])
+            c1 = s.count(move)
+            c2 = s.count(EMPTY_CELL)
+            return c1
+
+        def count_row():
+            lo = row * board.size
+            hi = lo + board.size
+            return count(lo, hi, 1)
+
+        def count_column():
+            return count(column, len(board.state), board.size)
+
+        def count_direct_diagonal():
+            return count(0, len(board.state), board.size + 1)
+
+        def count_opposite_diagonal():
+            lo = board.size - 1
+            hi = len(board.state) - lo
+            return count(lo, hi, lo)
+
+        return max(
+            count_row(),
+            count_column(),
+            count_direct_diagonal(),
+            count_opposite_diagonal()
+        )
+
 
 class ParallelTreetSearchPlayer(TreetSearchPlayer):
+    def __str__(self):
+        return 'parallel computer player: ' + + self.name
+
     def next_move(self, board):
         num_cores = multiprocessing.cpu_count()
         scores = Parallel(n_jobs=num_cores)(
@@ -160,20 +202,20 @@ class ParallelTreetSearchPlayer(TreetSearchPlayer):
     def process(self, x):
         cp = board.copy()
         cp.update(x, COMPUTER_MOVE)
-        return (x, self.evaluate(cp, COMPUTER_MOVE, PLAYER_MOVE, 1))
-
-    def __str__(self):
-        return 'parallel computer player'
+        return (x, self.evaluate(cp, x, COMPUTER_MOVE, PLAYER_MOVE, 1))
 
 
 class RandomPlayer:
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return 'random player: ' + self.name
+
     def next_move(self, board):
         cells = list(board.empty_cells())
         rand = random.randint(0, len(cells) - 1)
         return cells[rand]
-
-    def __str__(self):
-        return 'random player'
 
 
 if __name__ == '__main__':
@@ -190,8 +232,9 @@ if __name__ == '__main__':
     size = int(input('Enter field size:'))
     board = TicTacToeBoard(size)
 
-    playerA = RandomPlayer()
-    playerB = RandomPlayer()
+    playerA = TreetSearchPlayer('player A', 1)
+    # playerA = HumanPlayer()
+    playerB = TreetSearchPlayer('player B', 1)
 
     while True:
         start = time.time()
