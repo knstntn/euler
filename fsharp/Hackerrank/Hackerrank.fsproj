@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Solutions/intro-00-solve-me-first.fs" />
+    <Compile Include="Solutions/intro-01-hello-world.fs" />
+    <Compile Include="Solutions/intro-02-hello-world-n-times.fs" />
+    <Compile Include="Solutions/intro-03-list-replication.fs" />
+    <Compile Include="Solutions/intro-04-filter-array.fs" />
+    <Compile Include="Solutions/intro-05-filter-positions-in-a-list.fs" />
+    <Compile Include="Solutions/intro-06-reverse-a-list.fs" />
+    <Compile Include="Solutions/intro-07-sum-of-odd-elements.fs" />
+    <Compile Include="Solutions/intro-08-list-length.fs" />
+    <Compile Include="Solutions/intro-09-update-list.fs" />
+    <Compile Include="Solutions/intro-10-eval-ex.fs" />
+    <Compile Include="Hackerrank.fs" />
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>
